@@ -8,7 +8,8 @@ def validate(data):
         if set(r)!={'monster','zone','spell','confirmed'} or r['confirmed'] is not True or not isinstance(r['monster'],str) or not 0<len(r['monster'])<=64 or any(ord(c)<32 or ord(c)==127 for c in r['monster']) or type(r['zone'])!=int or not 0<=r['zone']<=4095 or type(r['spell'])!=int or not 512<=r['spell']<=767: raise ValueError('Invalid public observation')
     return data
 if __name__=='__main__':
-    with urllib.request.urlopen(URL,timeout=30) as response: raw=response.read(2097153)
+    request=urllib.request.Request(URL,headers={'User-Agent':'Shergaze-BLU-Sync/1.0','Accept':'application/json'})
+    with urllib.request.urlopen(request,timeout=30) as response: raw=response.read(2097153)
     if len(raw)>2097152: raise ValueError('Oversized list')
     data=validate(json.loads(raw));path=Path('blue-magic.json')
     # Preserve existing observations and confirmed flags even if a service snapshot is incomplete.
